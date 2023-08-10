@@ -18,8 +18,17 @@ export default class App extends Component {
   };
 
   componentDidMount() {
-    document.title = 'HW-2 Phonebook';
-  }
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  };
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts',JSON.stringify(this.state.contacts));
+    }
+  };
   handleAddContact = contact => {
     const { contacts } = this.state;
     const { name } = contact;
@@ -34,7 +43,6 @@ export default class App extends Component {
     });
   };
 
- 
   handleDeleteContact = id => {
     this.setState(prevState => {
       return {
@@ -43,12 +51,10 @@ export default class App extends Component {
     });
   };
 
-
   handleFilter = e => {
     this.setState({ filter: e.target.value });
   };
 
- 
   getFilteredContacts = () => {
     const { contacts, filter } = this.state;
     return contacts.filter(contact =>
@@ -74,4 +80,3 @@ export default class App extends Component {
     );
   }
 }
-
